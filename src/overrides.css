@@ -1,0 +1,65 @@
+/* Host theme recipe copied/adapted from lv-translator 0.2.1 src/frontend.ts.
+   --lumiverse-bg is authoritative even with custom background themes. */
+.bs-overlay, .bs-fab, .lv-excerpt-action {
+  --ex-bg: var(--lumiverse-bg, Canvas);
+  --ex-text: var(--lumiverse-text, CanvasText);
+  --ex-accent: var(--lumiverse-primary, currentColor);
+  --ex-edge: color-mix(in srgb, var(--ex-text) 24%, transparent);
+  color: var(--ex-text); font-size: 15px;
+}
+.bs-overlay, .bs-overlay *, .bs-fab, .lv-excerpt-action { box-sizing: border-box; }
+.bs-panel { background: var(--ex-bg); background-image: none !important; color: var(--ex-text); border-color: var(--ex-edge); }
+.bs-header, .bs-footer { background: var(--ex-bg); border-color: var(--ex-edge); flex-shrink: 0; }
+.bs-controls { width: 390px; color: var(--ex-text); border-color: var(--ex-edge); }
+.bs-preview-wrap { background: color-mix(in srgb, var(--ex-text) 7%, var(--ex-bg)); }
+.bs-controls :is(.bs-label,.bs-hint,.bs-section-title,.bs-rule-arrow), .bs-subtitle, .bs-status { color: var(--ex-text); font-size: 15px; }
+.bs-title { font-size: 18px; }
+.bs-header-left { flex-wrap: wrap; gap: 4px 12px; }
+.bs-subtitle { letter-spacing: .03em; }
+.bs-overlay :is(button,select,input:not([type=file]):not(.bs-swatch-picker)), .bs-fab, .lv-excerpt-action {
+  min-height: 44px; min-width: 44px; font-size: 15px; touch-action: manipulation;
+}
+.bs-overlay :is(.bs-btn,.bs-icon-btn,.bs-select,.bs-input,.bs-num,.bs-seg-btn,.bs-rule-remove,.bs-swatch-erase),
+.lv-excerpt-picker :is(button,select), .bs-fab, .lv-excerpt-action {
+  background: var(--ex-bg); color: var(--ex-text); border: 1px solid var(--ex-edge); border-radius: 6px;
+}
+.bs-overlay :is(.bs-btn-primary,.bs-seg-btn.bs-active), .lv-excerpt-picker button[aria-pressed=true] {
+  background: color-mix(in srgb, var(--ex-accent) 25%, var(--ex-bg));
+  color: var(--ex-text); border-color: var(--ex-accent);
+}
+.bs-overlay :is(button,select,input):focus-visible, .lv-excerpt-action:focus-visible {
+  outline: 2px solid var(--ex-accent); outline-offset: 2px;
+}
+.bs-input::placeholder { color: color-mix(in srgb, var(--ex-text) 75%, transparent); }
+.bs-slider { height: 44px; background: linear-gradient(var(--ex-edge),var(--ex-edge)) center / 100% 4px no-repeat; }
+.bs-check { accent-color: var(--ex-accent); }
+.bs-swatch-badge { position: static; display: flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; margin-left: 4px; background: var(--ex-bg); color: var(--ex-text); font-size: 15px; }
+.bs-swatch-censor { color: white; }
+.bs-footer { flex-wrap: wrap; padding: 10px 16px; }
+.bs-status { white-space: normal; flex: 1 1 140px; }
+.bs-fab { padding: 8px 14px; }
+.bs-fab-mark { color: var(--ex-accent); }
+.lv-excerpt-action { padding: 6px 10px; cursor: pointer; white-space: nowrap; }
+.lv-excerpt-picker { border-bottom: 1px solid var(--ex-edge); padding-bottom: 16px; }
+.lv-excerpt-picker h3 { margin: 0 0 8px; font-size: 17px; }
+.lv-excerpt-picker p { font-size: 15px; line-height: 1.5; }
+.lv-excerpt-picker select { width: 100%; }
+.lv-excerpt-pieces { display: grid; gap: 6px; margin: 8px 0; max-height: 240px; overflow: auto; }
+.lv-excerpt-pieces button { text-align: left; white-space: pre-wrap; overflow-wrap: anywhere; padding: 8px; }
+.lv-excerpt-picker-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.lv-excerpt-picker-actions button { padding: 6px 10px; }
+.lv-excerpt-picker button:disabled { opacity: .6; }
+@media(max-width:760px) {
+  .bs-overlay { padding: 0; height: 100dvh; }
+  .bs-panel { width: 100%; height: 100%; max-height: 100dvh; border-radius: 0; }
+  .bs-header { padding: calc(env(safe-area-inset-top,0px) + 8px) 58px 8px 12px; }
+  .bs-header .bs-icon-btn { display: none; }
+  .bs-subtitle { display: none; }
+  .bs-body { flex-direction: column; overflow-y: auto; overscroll-behavior: contain; }
+  .bs-preview-wrap { flex: none; overflow: visible; max-height: none; padding: 12px; }
+  .bs-controls { width: 100%; overflow: visible; padding: 16px 12px; }
+  .bs-row { flex-wrap: wrap; gap: 6px; }
+  .bs-footer { padding: 8px max(12px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px)); gap: 6px; }
+  .bs-status { flex-basis: 100%; }
+}
+.bs-fab-mark { font-size: 15px; }

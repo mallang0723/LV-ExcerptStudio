@@ -1,0 +1,25 @@
+발췌 스튜디오 (Lumiverse) — 비공식 이식
+
+원작: 「발췌 스튜디오」 1.0.3 (Marinara Engine 확장)
+원작자: boricha417
+원작 글: https://gall.dcinside.com/mini/board/view/?id=aichatfrontend&no=122
+원작 저장소: https://github.com/boricha417/marinara-excerpt-studio
+
+작업 지시서가 전달한 허락 기록(2026-10-28): “응 편한대로 해줘!!”
+조건: 갤 글과 GitHub를 원본으로 표기.
+비공식 루미버스 이식이며 원작에 대한 소유권을 주장하지 않는다.
+별도의 포괄적 라이선스를 임의로 부여하지 않는다.
+
+vendor/original/extension.js 및 extension.css는 제공된 원작의 바이트 그대로다.
+SHA-256과 검증 절차: scripts/verify-original.mjs
+빌드 시 변경은 src/patch.mjs의 정확한 anchor/횟수 검사로만 적용한다.
+
+재사용 부품(사용자 지정 로컬 출처):
+- lv-translator 0.2.1 / src/toolbar.ts: findActionRow 복사, decorator/observer/cleanup 패턴을 발췌 버튼에 맞춰 축소.
+- lv-translator 0.2.1 / src/frontend.ts: Lumiverse 테마 변수와 color-mix 폴백 방식.
+- marinara-anon-lumi-work/publish/src/overlay-guard.js: 폰 X, history/back, safe-area 가드 복사. namespace/색/history.state 보존 조정.
+- marinara-anon-lumi-work/publish/scripts/browser-qa.mjs: 브라우저·viewport·보안 출처·테마 조합 및 실측 검증 패턴을 축소 재사용.
+- marinara-anon-lumi-work/publish/src/anon/patch.mjs 및 scripts/verify-original.mjs, scripts/build.mjs: 원작 무수정/checked-anchor/생성 빌드 구조.
+- memoryVault-lumi-publish/scripts/build.mjs, src/shim.js, src/text-map.json: 지역 shim과 횟수 검증 문자열 패치 구조 참고.
+
+리디바탕 파일은 이 저장소에 포함하지 않는다. 원작의 지정 CDN 로딩을 유지한다.

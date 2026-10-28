@@ -1,0 +1,420 @@
+{
+  "date": "2026-10-28",
+  "node": "26.7.0",
+  "bun": "1.4.3",
+  "jsdom": "29.1.1",
+  "playwright": "1.58.2",
+  "frontendSha256": "88f66e32a99a946316e4924cba128283d90324665f85f4e5cb92aab4741d0525",
+  "unit": {
+    "passed": 14,
+    "failed": 0
+  },
+  "dom": {
+    "passed": 10,
+    "failed": 0,
+    "canvas": "stubbed"
+  },
+  "browser": {
+    "passed": 24,
+    "failed": 0,
+    "results": [
+      {
+        "tag": "firefox-360-secure",
+        "theme": "light",
+        "layout": "minimal",
+        "env": {
+          "secure": true,
+          "uuid": "function",
+          "clipboard": "object"
+        },
+        "pngBytes": 114555,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(255, 250, 245)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-360-secure",
+        "theme": "light",
+        "layout": "bubble",
+        "env": {
+          "secure": true,
+          "uuid": "function",
+          "clipboard": "object"
+        },
+        "pngBytes": 114555,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(255, 250, 245)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-360-secure",
+        "theme": "dark",
+        "layout": "minimal",
+        "env": {
+          "secure": true,
+          "uuid": "function",
+          "clipboard": "object"
+        },
+        "pngBytes": 114555,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(40, 32, 51)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-360-secure",
+        "theme": "dark",
+        "layout": "bubble",
+        "env": {
+          "secure": true,
+          "uuid": "function",
+          "clipboard": "object"
+        },
+        "pngBytes": 114555,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(40, 32, 51)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-360-insecure",
+        "theme": "light",
+        "layout": "minimal",
+        "env": {
+          "secure": false,
+          "uuid": "undefined",
+          "clipboard": "undefined"
+        },
+        "pngBytes": 112449,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(255, 250, 245)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-360-insecure",
+        "theme": "light",
+        "layout": "bubble",
+        "env": {
+          "secure": false,
+          "uuid": "undefined",
+          "clipboard": "undefined"
+        },
+        "pngBytes": 112449,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(255, 250, 245)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-360-insecure",
+        "theme": "dark",
+        "layout": "minimal",
+        "env": {
+          "secure": false,
+          "uuid": "undefined",
+          "clipboard": "undefined"
+        },
+        "pngBytes": 112449,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(40, 32, 51)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-360-insecure",
+        "theme": "dark",
+        "layout": "bubble",
+        "env": {
+          "secure": false,
+          "uuid": "undefined",
+          "clipboard": "undefined"
+        },
+        "pngBytes": 112449,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(40, 32, 51)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-390-secure",
+        "theme": "light",
+        "layout": "minimal",
+        "env": {
+          "secure": true,
+          "uuid": "function",
+          "clipboard": "object"
+        },
+        "pngBytes": 112538,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(255, 250, 245)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-390-secure",
+        "theme": "light",
+        "layout": "bubble",
+        "env": {
+          "secure": true,
+          "uuid": "function",
+          "clipboard": "object"
+        },
+        "pngBytes": 112538,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(255, 250, 245)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-390-secure",
+        "theme": "dark",
+        "layout": "minimal",
+        "env": {
+          "secure": true,
+          "uuid": "function",
+          "clipboard": "object"
+        },
+        "pngBytes": 112538,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(40, 32, 51)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-390-secure",
+        "theme": "dark",
+        "layout": "bubble",
+        "env": {
+          "secure": true,
+          "uuid": "function",
+          "clipboard": "object"
+        },
+        "pngBytes": 112538,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(40, 32, 51)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-390-insecure",
+        "theme": "light",
+        "layout": "minimal",
+        "env": {
+          "secure": false,
+          "uuid": "undefined",
+          "clipboard": "undefined"
+        },
+        "pngBytes": 115595,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(255, 250, 245)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-390-insecure",
+        "theme": "light",
+        "layout": "bubble",
+        "env": {
+          "secure": false,
+          "uuid": "undefined",
+          "clipboard": "undefined"
+        },
+        "pngBytes": 115595,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(255, 250, 245)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-390-insecure",
+        "theme": "dark",
+        "layout": "minimal",
+        "env": {
+          "secure": false,
+          "uuid": "undefined",
+          "clipboard": "undefined"
+        },
+        "pngBytes": 115595,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(40, 32, 51)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-390-insecure",
+        "theme": "dark",
+        "layout": "bubble",
+        "env": {
+          "secure": false,
+          "uuid": "undefined",
+          "clipboard": "undefined"
+        },
+        "pngBytes": 115595,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(40, 32, 51)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-1280-secure",
+        "theme": "light",
+        "layout": "minimal",
+        "env": {
+          "secure": true,
+          "uuid": "function",
+          "clipboard": "object"
+        },
+        "pngBytes": 113182,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(255, 250, 245)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-1280-secure",
+        "theme": "light",
+        "layout": "bubble",
+        "env": {
+          "secure": true,
+          "uuid": "function",
+          "clipboard": "object"
+        },
+        "pngBytes": 113182,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(255, 250, 245)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-1280-secure",
+        "theme": "dark",
+        "layout": "minimal",
+        "env": {
+          "secure": true,
+          "uuid": "function",
+          "clipboard": "object"
+        },
+        "pngBytes": 113182,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(40, 32, 51)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-1280-secure",
+        "theme": "dark",
+        "layout": "bubble",
+        "env": {
+          "secure": true,
+          "uuid": "function",
+          "clipboard": "object"
+        },
+        "pngBytes": 113182,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(40, 32, 51)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-1280-insecure",
+        "theme": "light",
+        "layout": "minimal",
+        "env": {
+          "secure": false,
+          "uuid": "undefined",
+          "clipboard": "undefined"
+        },
+        "pngBytes": 114147,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(255, 250, 245)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-1280-insecure",
+        "theme": "light",
+        "layout": "bubble",
+        "env": {
+          "secure": false,
+          "uuid": "undefined",
+          "clipboard": "undefined"
+        },
+        "pngBytes": 114147,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(255, 250, 245)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-1280-insecure",
+        "theme": "dark",
+        "layout": "minimal",
+        "env": {
+          "secure": false,
+          "uuid": "undefined",
+          "clipboard": "undefined"
+        },
+        "pngBytes": 114147,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(40, 32, 51)",
+        "hscroll": false
+      },
+      {
+        "tag": "firefox-1280-insecure",
+        "theme": "dark",
+        "layout": "bubble",
+        "env": {
+          "secure": false,
+          "uuid": "undefined",
+          "clipboard": "undefined"
+        },
+        "pngBytes": 114147,
+        "short": [],
+        "overflow": [],
+        "small": [],
+        "panelBg": "rgb(40, 32, 51)",
+        "hscroll": false
+      }
+    ]
+  },
+  "unavailable": [
+    {
+      "browser": "chromium",
+      "stage": "launch",
+      "reason": "sandbox: crashpad setsockopt Operation not permitted; SIGTRAP before page load"
+    }
+  ],
+  "notTested": [
+    "installed Lumiverse",
+    "Android/iOS WebView",
+    "live RIDIBatang CDN",
+    "physical safe-area and on-screen keyboard"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "excerpt-studio-lv",
+  "version": "1.0.0-lv.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "verify": "node scripts/verify-original.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --test --test-isolation=none test/*.test.mjs",
+    "test:dom": "node --test --test-isolation=none qa/dom.test.mjs",
+    "qa": "node scripts/browser-qa.mjs"
+  }
+}
