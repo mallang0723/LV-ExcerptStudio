@@ -2455,7 +2455,6 @@ var CSS = `/* ── 발췌 스튜디오 v2 · 저널 미니멀 ─────�
   .bs-overlay { padding: 0; height: 100dvh; }
   .bs-panel { width: 100%; height: 100%; max-height: 100dvh; border-radius: 0; }
   .bs-header { padding: calc(env(safe-area-inset-top,0px) + 8px) 58px 8px 12px; }
-  .bs-header .bs-icon-btn { display: none; }
   .bs-subtitle { display: none; }
   .bs-body { flex-direction: column; overflow-y: auto; overscroll-behavior: contain; }
   .bs-preview-wrap { flex: none; overflow: visible; max-height: none; padding: 12px; }
@@ -2463,6 +2462,9 @@ var CSS = `/* ── 발췌 스튜디오 v2 · 저널 미니멀 ─────�
   .bs-row { flex-wrap: wrap; gap: 6px; }
   .bs-footer { padding: 8px max(12px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px)); gap: 6px; }
   .bs-status { flex-basis: 100%; }
+}
+@media(max-width:720px) {
+  .bs-header .bs-icon-btn { display: none; }
 }
 .bs-fab-mark { font-size: 15px; }
 `;
@@ -2539,8 +2541,8 @@ button{pointer-events:auto;position:fixed;top:calc(env(safe-area-inset-top,0px) 
 button:active{background:color-mix(in srgb,currentColor 15%,var(--lumiverse-bg,Canvas))}
 button:focus-visible{outline:3px solid var(--lumiverse-primary,currentColor);outline-offset:2px}
 svg{width:22px;height:22px;display:block}
-/* desktop with a mouse: the screens' own close button and Escape are enough */
-@media (min-width:721px) and (hover:hover){button{display:none}}
+/* Above phone width, use the screen's own close button regardless of input device. */
+@media (min-width:721px){button{display:none}}
 `;
 var ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
 function createOverlayGuard({ doc = globalThis.document, win = globalThis.window } = {}) {
@@ -2846,14 +2848,33 @@ function messageText(element) {
   const body = messageBody(element);
   if (!body)
     return "";
-  const clone = body.cloneNode(true);
-  clone.querySelectorAll(EXCLUDED + ", script, style").forEach((el) => el.remove());
-  clone.querySelectorAll("br").forEach((el) => el.replaceWith(`
-`));
-  clone.querySelectorAll("p, div, li, blockquote, pre, h1, h2, h3").forEach((el) => el.append(`
+  const win = body.ownerDocument.defaultView;
+  const omitted = (el) => el.matches(EXCLUDED + ', [hidden], [aria-hidden="true"], template, script, style');
+  const hidden = (style) => style.display === "none" || style.visibility === "hidden";
+  for (let ancestor = body.parentElement;ancestor; ancestor = ancestor.parentElement) {
+    if (omitted(ancestor) || hidden(win.getComputedStyle(ancestor)))
+      return "";
+  }
+  function collect(node) {
+    if (node.nodeType === 3)
+      return node.textContent;
+    if (node.nodeType !== 1 || omitted(node))
+      return "";
+    const style = win.getComputedStyle(node);
+    if (hidden(style))
+      return "";
+    if (node.tagName === "BR")
+      return `
+`;
+    const text = [...node.childNodes].map(collect).join("");
+    const block = /^(block|flow-root|flex|grid|list-item|table|table-row|table-caption)( |$)/.test(style.display);
+    return block && text ? `
 
-`));
-  return (clone.textContent || "").replace(/\r\n/g, `
+` + text + `
+
+` : text;
+  }
+  return collect(body).replace(/\r\n/g, `
 `).replace(/\n{3,}/g, `
 
 `).trim();

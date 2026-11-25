@@ -13,8 +13,8 @@ button{pointer-events:auto;position:fixed;top:calc(env(safe-area-inset-top,0px) 
 button:active{background:color-mix(in srgb,currentColor 15%,var(--lumiverse-bg,Canvas))}
 button:focus-visible{outline:3px solid var(--lumiverse-primary,currentColor);outline-offset:2px}
 svg{width:22px;height:22px;display:block}
-/* desktop with a mouse: the screens' own close button and Escape are enough */
-@media (min-width:721px) and (hover:hover){button{display:none}}
+/* Above phone width, use the screen's own close button regardless of input device. */
+@media (min-width:721px){button{display:none}}
 `;
 const ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
 

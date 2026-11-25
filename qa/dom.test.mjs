@@ -51,6 +51,43 @@ test('minimal action row opens full body, excluding metadata/buttons; tap picker
   assert.equal(f.d.querySelector('.bs-card-text').textContent, '첫 문장입니다.');
   f.button('PNG 저장').click(); await delay(10); assert.equal(f.downloads.length, 1); assert.ok(f.paints.length > 0);
 }));
+test('excerpt omits hidden HTML subtrees and keeps visible block spacing', () => withFixture(async f => {
+  const body = f.d.querySelector('[data-component="MessageContent"]');
+  const style = f.d.createElement('style');
+  style.textContent = 'article .popup-card { display: none; } article .concealed { visibility: hidden; } article .visible-block { display: block; }';
+  f.d.head.append(style);
+  body.innerHTML = '<p>여름 기온<span style="display:none">숨긴 카드<span>숨긴 자식</span></span>입니다.</p>'
+    + '<div class="popup-card"><span>스타일시트 숨김</span></div>'
+    + '<div class="concealed"><span style="visibility:visible">숨긴 부모의 자식</span></div>'
+    + '<div hidden style="display:block">hidden 속성</div><div aria-hidden="true">접근성 숨김</div>'
+    + '<template>템플릿</template><script type="text/plain">스크립트</script><style>.unused { color: red; }</style>'
+    + '다음 줄<span class="visible-block">보이는 블록</span>끝<br>새 줄'
+    + '<p aria-hidden="false">마지막 문단.</p>';
+  const before = body.innerHTML;
+  await f.open();
+  assert.equal(f.d.querySelector('.bs-card-text').textContent,
+    '여름 기온입니다.\n\n다음 줄\n\n보이는 블록\n\n끝\n새 줄\n\n마지막 문단.');
+  assert.equal(body.innerHTML, before);
+}));
+test('message collection rejects a hidden body or hidden ancestor', async () => {
+  const { messageText } = await import('../src/adapter.js');
+  await withFixture(async f => {
+    const article = f.d.querySelector('article');
+    const body = f.d.querySelector('[data-component="MessageContent"]');
+    for (const element of [body, article, article.parentElement]) {
+      for (const css of ['display:none', 'visibility:hidden']) {
+        element.style.cssText = css;
+        assert.equal(messageText(article), '');
+        element.removeAttribute('style');
+      }
+      for (const [name, value] of [['hidden', ''], ['aria-hidden', 'true']]) {
+        element.setAttribute(name, value);
+        assert.equal(messageText(article), '');
+        element.removeAttribute(name);
+      }
+    }
+  });
+});
 test('bubble decorator lifecycle, remount and virtualized id updates avoid duplicate buttons', () => withFixture(async f => {
   assert.equal(f.d.querySelectorAll('.lv-excerpt-action').length, 1); f.render('bubble', 'm2'); await delay(150);
   assert.equal(f.d.querySelectorAll('.lv-excerpt-action').length, 1); await f.open(); assert.ok(f.d.querySelector('.bs-overlay'));

@@ -5,13 +5,26 @@ export function messageBody(element) { return element?.querySelector(CONTENT) ||
 export function messageText(element) {
   const body = messageBody(element);
   if (!body) return '';
-  // Clone only for reading: the host message is never modified by the shim.
-  const clone = body.cloneNode(true);
-  clone.querySelectorAll(EXCLUDED + ', script, style').forEach(el => el.remove());
-  // innerText on detached nodes loses line breaks; preserve rendered block separators explicitly.
-  clone.querySelectorAll('br').forEach(el => el.replaceWith('\n'));
-  clone.querySelectorAll('p, div, li, blockquote, pre, h1, h2, h3').forEach(el => el.append('\n\n'));
-  return (clone.textContent || '').replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+  const win = body.ownerDocument.defaultView;
+  const omitted = el => el.matches(EXCLUDED + ', [hidden], [aria-hidden="true"], template, script, style');
+  const hidden = style => style.display === 'none' || style.visibility === 'hidden';
+  // Read styles on the live DOM: detached clones lose ancestor and stylesheet context.
+  // Prune whole hidden subtrees, including children that override visibility.
+  for (let ancestor = body.parentElement; ancestor; ancestor = ancestor.parentElement) {
+    if (omitted(ancestor) || hidden(win.getComputedStyle(ancestor))) return '';
+  }
+  function collect(node) {
+    if (node.nodeType === 3) return node.textContent;
+    if (node.nodeType !== 1 || omitted(node)) return '';
+    const style = win.getComputedStyle(node);
+    if (hidden(style)) return '';
+    if (node.tagName === 'BR') return '\n';
+    const text = [...node.childNodes].map(collect).join('');
+    // Preserve both sides of visible blocks without splitting inline text.
+    const block = /^(block|flow-root|flex|grid|list-item|table|table-row|table-caption)( |$)/.test(style.display);
+    return block && text ? '\n\n' + text + '\n\n' : text;
+  }
+  return collect(body).replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
 }
 export function isMessageRange(ctx, range) {
   const elementOf = n => n.nodeType === 1 ? n : n.parentElement;

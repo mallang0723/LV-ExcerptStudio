@@ -18,7 +18,7 @@
 
 ## 원작과 달라진 점
 
-- Spindle 식별자 `excerpt_studio_lv`, 버전 `1.0.0-lv.1`. **프런트엔드만 사용하고 요청 권한은 없습니다.** 서버 워커·모델·임베딩을 사용하지 않습니다.
+- Spindle 식별자 `excerpt_studio_lv`, 버전 `1.0.0-lv.1-v1`. **프런트엔드만 사용하고 요청 권한은 없습니다.** 서버 워커·모델·임베딩을 사용하지 않습니다.
 - 기본 작가가 **LUMIVERSE**, 작품명은 현재 채팅방 이름입니다. 수정한 작품명은 방별, 작가는 기기 전체에 기억합니다.
 - 메시지 동작 줄 진입 및 문장/문단 탭 선택을 추가했습니다. 드래그는 같은 메시지 본문 안에서만 허용합니다. 이름·동작 버튼·편집창·확장 위젯은 발췌에서 제외합니다.
 - 스튜디오 UI는 루미버스 기본·사용자 테마 변수에 맞춥니다. 카드 자체의 종이/색/이미지는 선택한 출력 설정을 따릅니다.
@@ -29,9 +29,11 @@
 
 발췌·편집·PNG 생성은 브라우저 안에서 처리합니다. 채팅방 제목은 호스트의 읽기 전용 API로 가져오고, 리디바탕을 선택하면 폰트 CDN에 요청합니다. 메시지나 이미지 파일을 업로드하지 않습니다. HTTP에서도 UUID·클립보드·파일 선택 저장 API에 의존하지 않고 Blob과 `<a download>`로 저장합니다.
 
-## 설치 / 검수용 빌드
+## 설치
 
-아직 공개/원격 저장소에 올리지 않은 검수용 작업물입니다. `spindle.json`과 `dist/frontend.js`가 준비되어 있습니다. 설치는 검수자가 대상 호스트의 로컬 확장 절차에 따라 진행하세요. 이번 작업에서는 실행 중인 루미버스에 설치하거나 접속하지 않았습니다.
+Lumiverse의 Spindle에서 이 GitHub 저장소 주소로 설치하세요. `spindle.json`과 빌드된 `dist/frontend.js`가 포함되어 있어 별도 빌드 없이 설치할 수 있습니다.
+
+## 개발 및 검증
 
 Node와 Bun이 있는 환경에서:
 
@@ -50,13 +52,14 @@ npm install --no-save --package-lock=false jsdom@29.1.1 playwright@1.58.2
 npm run test:dom
 npx playwright install firefox chromium
 npm run qa
+npm run test:visibility
 ```
 
 이미 설치된 도구를 읽어서 쓸 때는 `JSDOM_MODULE`, `PLAYWRIGHT_MODULE`, `FIREFOX_BIN`, `CHROMIUM_BIN`으로 절대 경로를 지정할 수 있습니다. `QA_BROWSERS=firefox npm run qa`는 Firefox만 실행합니다. 브라우저 하네스는 HTTPS/HTTP fixture를 요청 라우팅으로 제공하며 실제 호스트나 로컬 서버에 접속하지 않습니다. 결과와 스크린샷은 `qa/results/`에 저장됩니다.
 
 ## 검증 결과와 확인하지 못한 것
 
-[REPORT.md](REPORT.md)에 최종 결과, 단계별 상태와 제한을 기록했습니다. 원작 알고리즘 단위 테스트, 실제 번들의 DOM 통합 테스트, Firefox 360·390·1280 / HTTP·HTTPS / 라이트·다크 / minimal·bubble 검수가 포함됩니다.
+검증 도구에는 원작 알고리즘 단위 테스트, 실제 번들의 DOM 통합 테스트, Firefox 360·390·1280 / HTTP·HTTPS / 라이트·다크 / minimal·bubble 검수가 포함됩니다.
 
 - Chromium은 이 실행 환경의 소켓 제한으로 시작하지 못했습니다. 실제 Android/iOS 앱 WebView, 브라우저 다운로드 저장 위치 및 노치/키보드가 있는 기기의 동작은 미확인입니다.
 - 실행 중인 Lumiverse에는 접속하지 않았습니다. 실제 호스트 설치, 사용자 테마 전체, 리디바탕 CDN 실연결/CORS, 기기 이미지의 모든 형식은 별도 검수가 필요합니다.

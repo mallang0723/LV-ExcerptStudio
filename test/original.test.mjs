@@ -29,9 +29,9 @@ test('patch anchors fail closed on missing or duplicated matches', () => {
   assert.throws(() => patchOriginal(source.replace('"MARINARA"', '"CHANGED"')));
 });
 test('UTF-16 replacement moves marks after emoji and covers expanded words', () => {
-  const { api: a } = original(); const text = '😀 민수와 민수';
-  const before = a.annotateReplaced(text, []), after = a.annotateReplaced(text, [{ find: '민수', replace: '주인공' }]);
-  assert.equal(after.map(c => c.ch).join(''), '😀 주인공와 주인공');
+  const { api: a } = original(); const text = '😀 사과와 사과';
+  const before = a.annotateReplaced(text, []), after = a.annotateReplaced(text, [{ find: '사과', replace: '복숭아' }]);
+  assert.equal(after.map(c => c.ch).join(''), '😀 복숭아와 복숭아');
   assert.deepEqual(plain(a.remapMarks([{ start: 3, end: 5, type: 'y' }], before, after)), [{ start: 3, end: 6, type: 'y' }]);
 });
 test('sequential replacements and deletion keep/drop original marks', () => {
