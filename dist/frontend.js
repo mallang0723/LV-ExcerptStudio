@@ -2441,12 +2441,15 @@ var CSS = `/* ── 발췌 스튜디오 v2 · 저널 미니멀 ─────�
 .bs-status { white-space: normal; flex: 1 1 140px; }
 .bs-fab { padding: 8px 14px; }
 .bs-fab-mark { color: var(--ex-accent); }
-/* Host classes supply the message action's size, color and hover treatment. */
-.lv-excerpt-action { touch-action: manipulation; }
-.lv-excerpt-action > svg { display: block; flex-shrink: 0; }
-.lv-excerpt-action-fallback {
+/* Match the host's 28px action box at every width; host classes supply color and hover. */
+.lv-excerpt-action {
   display: inline-flex; align-items: center; justify-content: center;
-  box-sizing: border-box; padding: 6px; border: 0; border-radius: 6px;
+  box-sizing: border-box; width: 28px; height: 28px; min-width: 28px; min-height: 28px;
+  flex: 0 0 28px; padding: 0; touch-action: manipulation;
+}
+.lv-excerpt-action > svg { display: block; width: 13px; height: 13px; flex-shrink: 0; }
+.lv-excerpt-action-fallback {
+  border: 0; border-radius: 6px;
   background: transparent; color: var(--lumiverse-text-muted, var(--lumiverse-text, CanvasText));
   cursor: pointer;
 }
@@ -2457,9 +2460,7 @@ var CSS = `/* ── 발췌 스튜디오 v2 · 저널 미니멀 ─────�
 .lv-excerpt-action:focus-visible {
   outline: 2px solid var(--lumiverse-primary, currentColor); outline-offset: 2px;
 }
-@media (any-pointer: coarse) {
-  .lv-excerpt-action { min-width: 44px; min-height: 44px; }
-}
+
 .lv-excerpt-picker { border-bottom: 1px solid var(--ex-edge); padding-bottom: 16px; }
 .lv-excerpt-picker h3 { margin: 0 0 8px; font-size: 17px; }
 .lv-excerpt-picker p { font-size: 15px; line-height: 1.5; }
@@ -2674,7 +2675,7 @@ function createOverlayGuard({ doc = globalThis.document, win = globalThis.window
 
 // src/toolbar.js
 var BUBBLE_ROW = '[data-component="BubbleActions"]';
-var QUOTE_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-quote" aria-hidden="true" focusable="false"><path d="M10 3H7a4 4 0 0 0-4 4v10h7V9H3m18-6h-3a4 4 0 0 0-4 4v10h7V9h-7"/></svg>';
+var QUOTE_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-quote" aria-hidden="true" focusable="false"><path d="M10 3H7a4 4 0 0 0-4 4v10h7V9H3m18-6h-3a4 4 0 0 0-4 4v10h7V9h-7"/></svg>';
 function findActionRow(messageEl) {
   const footer = messageEl.querySelector('[data-spindle-mount="message_footer"]');
   const next = footer?.parentElement?.nextElementSibling;

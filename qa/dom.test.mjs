@@ -42,8 +42,8 @@ async function fixture(layout = 'minimal') {
     assert.equal(action.getAttribute('aria-label'), '이 메시지 발췌');
     assert.ok(action.classList.contains('host-action'));
     const icon = action.querySelector('svg');
-    assert.equal(icon.getAttribute('width'), '16');
-    assert.equal(icon.getAttribute('height'), '16');
+    assert.equal(icon.getAttribute('width'), '13');
+    assert.equal(icon.getAttribute('height'), '13');
     assert.equal(icon.getAttribute('stroke'), 'currentColor');
     assert.equal(icon.getAttribute('aria-hidden'), 'true');
     assert.equal(icon.getAttribute('focusable'), 'false');

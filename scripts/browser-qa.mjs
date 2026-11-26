@@ -48,23 +48,30 @@ try {
               const host = row.querySelector(':scope > button');
               const rect = button.getBoundingClientRect(), icon = button.querySelector('svg').getBoundingClientRect();
               const hostRect = host.getBoundingClientRect();
+              const hostIcon = host.querySelector('svg').getBoundingClientRect();
+              const previous = row.querySelector(':scope > button:last-of-type').getBoundingClientRect();
               const style = getComputedStyle(button), hostStyle = getComputedStyle(host);
               return { text: button.textContent, title: button.title, icon: [icon.width, icon.height],
                 size: [rect.width, rect.height], hostSize: [hostRect.width, hostRect.height],
                 color: style.color, hostColor: hostStyle.color, background: style.backgroundColor,
                 hostBackground: hostStyle.backgroundColor, sameLine: rect.top === hostRect.top,
                 overflow: row.scrollWidth > row.clientWidth || rect.right > innerWidth,
-                coarse: matchMedia('(any-pointer: coarse)').matches };
+                center: [icon.x + icon.width / 2 - rect.x - rect.width / 2, icon.y + icon.height / 2 - rect.y - rect.height / 2],
+                centerY: icon.y + icon.height / 2, hostCenterY: hostIcon.y + hostIcon.height / 2,
+                pitch: rect.x - previous.x };
             });
             assert.equal(actionMetrics.text, '');
             assert.equal(actionMetrics.title, '이 메시지 발췌');
-            assert.deepEqual(actionMetrics.icon, [16, 16]);
+            assert.deepEqual(actionMetrics.icon, [13, 13]);
+            assert.deepEqual(actionMetrics.size, [28, 28]);
             assert.deepEqual(actionMetrics.size, actionMetrics.hostSize);
             assert.equal(actionMetrics.color, actionMetrics.hostColor);
             assert.equal(actionMetrics.background, actionMetrics.hostBackground);
             assert.equal(actionMetrics.sameLine, true);
             assert.equal(actionMetrics.overflow, false);
-            if (actionMetrics.coarse) assert.ok(Math.min(...actionMetrics.size) >= 44);
+            assert.deepEqual(actionMetrics.center, [0, 0]);
+            assert.equal(actionMetrics.centerY, actionMetrics.hostCenterY);
+            assert.equal(actionMetrics.pitch, 30);
             await action.hover();
             const hover = await action.evaluate(b => ({ color: getComputedStyle(b).color, background: getComputedStyle(b).backgroundColor }));
             await page.locator('.host-actions > button').first().hover();

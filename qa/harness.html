@@ -3,10 +3,9 @@
 :root { --lumiverse-bg:#fffaf5; --lumiverse-text:#25202c; --lumiverse-primary:#7247ad; }
 body { margin:0; background:var(--lumiverse-bg); color:var(--lumiverse-text); font:16px sans-serif; }
 article { margin:12px; padding:8px; border:1px solid currentColor; }
-.host-actions { display:flex; flex-wrap:wrap; gap:4px; } button { cursor:pointer; }
+.host-actions { display:flex; flex-wrap:wrap; gap:2px; } button { cursor:pointer; }
 /* Stand-in host classes exercise class inheritance in both message layouts. */
-.host-action { display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; padding:6px; border:0; border-radius:6px; background:transparent; color:color-mix(in srgb,var(--lumiverse-text) 65%,transparent); }
+.host-action { display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; width:28px; height:28px; padding:0; flex-shrink:0; border:0; border-radius:6px; background:transparent; color:color-mix(in srgb,var(--lumiverse-text) 65%,transparent); }
 .host-action:hover { background:color-mix(in srgb,var(--lumiverse-text) 10%,transparent); color:var(--lumiverse-text); }
-@media(any-pointer:coarse) { .host-action { min-width:44px; min-height:44px; } }
 </style></head><body><header>메시지 바깥 선택 영역</header><main id="messages"></main>
 <script type="module" src="/qa/harness.js"></script></body></html>
