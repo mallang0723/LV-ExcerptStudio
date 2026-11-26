@@ -1,7 +1,7 @@
 {
   "identifier": "excerpt_studio_lv",
   "name": "발췌 스튜디오 (Lumiverse)",
-  "version": "1.0.0-lv.1-v2",
+  "version": "1.0.0-lv.1",
   "author": "mallang0723 (원작: boricha417)",
   "description": "메시지를 발췌 카드로 꾸며 PNG로 저장하는 비공식 이식",
   "permissions": [],
