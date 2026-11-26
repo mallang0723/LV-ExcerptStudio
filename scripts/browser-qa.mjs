@@ -40,6 +40,36 @@ try {
           if (originName === 'insecure') { assert.equal(env.uuid, 'undefined'); assert.equal(env.clipboard, 'undefined'); }
           for (const theme of ['light', 'dark']) for (const layout of ['minimal', 'bubble']) {
             await page.evaluate(({ theme, layout }) => { qa.setTheme(theme); qa.render(layout); }, { theme, layout });
+            const action = page.getByRole('button', { name: '이 메시지 발췌', exact: true });
+            await action.waitFor();
+            await page.mouse.move(0, 0);
+            const actionMetrics = await action.evaluate(button => {
+              const row = button.closest('.host-actions');
+              const host = row.querySelector(':scope > button');
+              const rect = button.getBoundingClientRect(), icon = button.querySelector('svg').getBoundingClientRect();
+              const hostRect = host.getBoundingClientRect();
+              const style = getComputedStyle(button), hostStyle = getComputedStyle(host);
+              return { text: button.textContent, title: button.title, icon: [icon.width, icon.height],
+                size: [rect.width, rect.height], hostSize: [hostRect.width, hostRect.height],
+                color: style.color, hostColor: hostStyle.color, background: style.backgroundColor,
+                hostBackground: hostStyle.backgroundColor, sameLine: rect.top === hostRect.top,
+                overflow: row.scrollWidth > row.clientWidth || rect.right > innerWidth,
+                coarse: matchMedia('(any-pointer: coarse)').matches };
+            });
+            assert.equal(actionMetrics.text, '');
+            assert.equal(actionMetrics.title, '이 메시지 발췌');
+            assert.deepEqual(actionMetrics.icon, [16, 16]);
+            assert.deepEqual(actionMetrics.size, actionMetrics.hostSize);
+            assert.equal(actionMetrics.color, actionMetrics.hostColor);
+            assert.equal(actionMetrics.background, actionMetrics.hostBackground);
+            assert.equal(actionMetrics.sameLine, true);
+            assert.equal(actionMetrics.overflow, false);
+            if (actionMetrics.coarse) assert.ok(Math.min(...actionMetrics.size) >= 44);
+            await action.hover();
+            const hover = await action.evaluate(b => ({ color: getComputedStyle(b).color, background: getComputedStyle(b).backgroundColor }));
+            await page.locator('.host-actions > button').first().hover();
+            assert.deepEqual(await page.locator('.host-actions > button').first().evaluate(b => ({ color: getComputedStyle(b).color, background: getComputedStyle(b).backgroundColor })), hover);
+            await page.screenshot({ path: `${output}/${tag}-${theme}-${layout}-action.png` });
             await page.locator('.lv-excerpt-action').click();
             await page.locator('.bs-card-title').filter({ hasText: '우리 이야기' }).waitFor();
             assert.equal(await page.locator('.bs-card-author').textContent(), 'LUMIVERSE');

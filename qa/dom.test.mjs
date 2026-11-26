@@ -27,7 +27,7 @@ async function fixture(layout = 'minimal') {
   };
   function render(next = layout, id = 'm1') {
     layout = next;
-    d.querySelector('main').innerHTML = `<article data-id="${id}"><div><div class="name">이름 제외</div><div data-component="MessageContent"><p>첫 문장입니다. “둘째 문장입니다!”</p><p>새 문단입니다.</p><button>더 보기 제외</button></div><span data-spindle-mount="message_footer"></span></div><div ${layout === 'bubble' ? 'data-component="BubbleActions"' : ''}><button>수정</button><button>삭제</button><button>복사</button>${layout === 'bubble' ? '<span data-spindle-mount="message_actions"></span>' : ''}</div></article>`;
+    d.querySelector('main').innerHTML = `<article data-id="${id}"><div><div class="name">이름 제외</div><div data-component="MessageContent"><p>첫 문장입니다. “둘째 문장입니다!”</p><p>새 문단입니다.</p><button>더 보기 제외</button></div><span data-spindle-mount="message_footer"></span></div><div ${layout === 'bubble' ? 'data-component="BubbleActions"' : ''}><button class="host-action">수정</button><button class="host-action">삭제</button><button class="host-action">복사</button>${layout === 'bubble' ? '<span data-spindle-mount="message_actions"></span>' : ''}</div></article>`;
     const slot = d.querySelector('[data-spindle-mount="message_actions"]');
     if (slot) decorators.get('message_actions')?.render(slot, { scope: `message:${id}:actions` });
   }
@@ -35,7 +35,20 @@ async function fixture(layout = 'minimal') {
   if (layout === 'bubble') render();
   await delay(140);
   const button = label => [...d.querySelectorAll('button')].find(b => b.textContent === label);
-  async function open() { d.querySelector('.lv-excerpt-action').click(); await delay(0); }
+  async function open() {
+    const action = d.querySelector('.lv-excerpt-action');
+    assert.equal(action.textContent, '');
+    assert.equal(action.title, '이 메시지 발췌');
+    assert.equal(action.getAttribute('aria-label'), '이 메시지 발췌');
+    assert.ok(action.classList.contains('host-action'));
+    const icon = action.querySelector('svg');
+    assert.equal(icon.getAttribute('width'), '16');
+    assert.equal(icon.getAttribute('height'), '16');
+    assert.equal(icon.getAttribute('stroke'), 'currentColor');
+    assert.equal(icon.getAttribute('aria-hidden'), 'true');
+    assert.equal(icon.getAttribute('focusable'), 'false');
+    action.click(); await delay(0);
+  }
   return { dom, w, d, ctx, downloads, paints, button, open, render, switchChat: () => { current = 'b'; }, dispose };
 }
 async function withFixture(fn, layout) {

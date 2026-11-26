@@ -1,5 +1,8 @@
 // Copied findActionRow and adapted lifecycle from lv-translator 0.2.1 src/toolbar.ts.
 const BUBBLE_ROW = '[data-component="BubbleActions"]';
+// Match lv-translator src/host-emu/dom-bridge.ts:33 and 573–580:
+// a 16px currentColor SVG inside a button with the neighboring host button's classes.
+const QUOTE_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-quote" aria-hidden="true" focusable="false"><path d="M10 3H7a4 4 0 0 0-4 4v10h7V9H3m18-6h-3a4 4 0 0 0-4 4v10h7V9h-7"/></svg>';
 export function findActionRow(messageEl) {
   const footer = messageEl.querySelector('[data-spindle-mount="message_footer"]');
   const next = footer?.parentElement?.nextElementSibling;
@@ -21,8 +24,12 @@ export function mountToolbars(ctx, onOpen) {
     slot.dataset.excerptToolbar = id;
     slot.style.display = 'contents';
     const button = document.createElement('button');
-    button.type = 'button'; button.className = 'lv-excerpt-action';
-    button.textContent = '❝ 발췌'; button.title = '이 메시지 발췌';
+    const row = slot.closest(BUBBLE_ROW) || slot.parentElement;
+    const ref = row?.querySelector(':scope > button:not(.lv-excerpt-action)');
+    button.type = 'button'; button.className = ref?.className || 'lv-excerpt-action-fallback';
+    button.classList.add('lv-excerpt-action');
+    button.innerHTML = QUOTE_SVG; button.title = '이 메시지 발췌';
+    button.setAttribute('aria-label', '이 메시지 발췌');
     button.addEventListener('click', event => {
       event.preventDefault(); event.stopPropagation(); onOpen(id);
     });

@@ -2402,14 +2402,14 @@ var CSS = `/* ── 발췌 스튜디오 v2 · 저널 미니멀 ─────�
 
 /* Host theme recipe copied/adapted from lv-translator 0.2.1 src/frontend.ts.
    --lumiverse-bg is authoritative even with custom background themes. */
-.bs-overlay, .bs-fab, .lv-excerpt-action {
+.bs-overlay, .bs-fab {
   --ex-bg: var(--lumiverse-bg, Canvas);
   --ex-text: var(--lumiverse-text, CanvasText);
   --ex-accent: var(--lumiverse-primary, currentColor);
   --ex-edge: color-mix(in srgb, var(--ex-text) 24%, transparent);
   color: var(--ex-text); font-size: 15px;
 }
-.bs-overlay, .bs-overlay *, .bs-fab, .lv-excerpt-action { box-sizing: border-box; }
+.bs-overlay, .bs-overlay *, .bs-fab { box-sizing: border-box; }
 .bs-panel { background: var(--ex-bg); background-image: none !important; color: var(--ex-text); border-color: var(--ex-edge); }
 .bs-header, .bs-footer { background: var(--ex-bg); border-color: var(--ex-edge); flex-shrink: 0; }
 .bs-controls { width: 390px; color: var(--ex-text); border-color: var(--ex-edge); }
@@ -2418,18 +2418,18 @@ var CSS = `/* ── 발췌 스튜디오 v2 · 저널 미니멀 ─────�
 .bs-title { font-size: 18px; }
 .bs-header-left { flex-wrap: wrap; gap: 4px 12px; }
 .bs-subtitle { letter-spacing: .03em; }
-.bs-overlay :is(button,select,input:not([type=file]):not(.bs-swatch-picker)), .bs-fab, .lv-excerpt-action {
+.bs-overlay :is(button,select,input:not([type=file]):not(.bs-swatch-picker)), .bs-fab {
   min-height: 44px; min-width: 44px; font-size: 15px; touch-action: manipulation;
 }
 .bs-overlay :is(.bs-btn,.bs-icon-btn,.bs-select,.bs-input,.bs-num,.bs-seg-btn,.bs-rule-remove,.bs-swatch-erase),
-.lv-excerpt-picker :is(button,select), .bs-fab, .lv-excerpt-action {
+.lv-excerpt-picker :is(button,select), .bs-fab {
   background: var(--ex-bg); color: var(--ex-text); border: 1px solid var(--ex-edge); border-radius: 6px;
 }
 .bs-overlay :is(.bs-btn-primary,.bs-seg-btn.bs-active), .lv-excerpt-picker button[aria-pressed=true] {
   background: color-mix(in srgb, var(--ex-accent) 25%, var(--ex-bg));
   color: var(--ex-text); border-color: var(--ex-accent);
 }
-.bs-overlay :is(button,select,input):focus-visible, .lv-excerpt-action:focus-visible {
+.bs-overlay :is(button,select,input):focus-visible {
   outline: 2px solid var(--ex-accent); outline-offset: 2px;
 }
 .bs-input::placeholder { color: color-mix(in srgb, var(--ex-text) 75%, transparent); }
@@ -2441,7 +2441,25 @@ var CSS = `/* ── 발췌 스튜디오 v2 · 저널 미니멀 ─────�
 .bs-status { white-space: normal; flex: 1 1 140px; }
 .bs-fab { padding: 8px 14px; }
 .bs-fab-mark { color: var(--ex-accent); }
-.lv-excerpt-action { padding: 6px 10px; cursor: pointer; white-space: nowrap; }
+/* Host classes supply the message action's size, color and hover treatment. */
+.lv-excerpt-action { touch-action: manipulation; }
+.lv-excerpt-action > svg { display: block; flex-shrink: 0; }
+.lv-excerpt-action-fallback {
+  display: inline-flex; align-items: center; justify-content: center;
+  box-sizing: border-box; padding: 6px; border: 0; border-radius: 6px;
+  background: transparent; color: var(--lumiverse-text-muted, var(--lumiverse-text, CanvasText));
+  cursor: pointer;
+}
+.lv-excerpt-action-fallback:hover {
+  background: var(--lumiverse-fill-hover, color-mix(in srgb, currentColor 10%, transparent));
+  color: var(--lumiverse-text, CanvasText);
+}
+.lv-excerpt-action:focus-visible {
+  outline: 2px solid var(--lumiverse-primary, currentColor); outline-offset: 2px;
+}
+@media (any-pointer: coarse) {
+  .lv-excerpt-action { min-width: 44px; min-height: 44px; }
+}
 .lv-excerpt-picker { border-bottom: 1px solid var(--ex-edge); padding-bottom: 16px; }
 .lv-excerpt-picker h3 { margin: 0 0 8px; font-size: 17px; }
 .lv-excerpt-picker p { font-size: 15px; line-height: 1.5; }
@@ -2656,6 +2674,7 @@ function createOverlayGuard({ doc = globalThis.document, win = globalThis.window
 
 // src/toolbar.js
 var BUBBLE_ROW = '[data-component="BubbleActions"]';
+var QUOTE_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-quote" aria-hidden="true" focusable="false"><path d="M10 3H7a4 4 0 0 0-4 4v10h7V9H3m18-6h-3a4 4 0 0 0-4 4v10h7V9h-7"/></svg>';
 function findActionRow(messageEl) {
   const footer = messageEl.querySelector('[data-spindle-mount="message_footer"]');
   const next = footer?.parentElement?.nextElementSibling;
@@ -2680,10 +2699,14 @@ function mountToolbars(ctx, onOpen) {
     slot.dataset.excerptToolbar = id;
     slot.style.display = "contents";
     const button = document.createElement("button");
+    const row = slot.closest(BUBBLE_ROW) || slot.parentElement;
+    const ref = row?.querySelector(":scope > button:not(.lv-excerpt-action)");
     button.type = "button";
-    button.className = "lv-excerpt-action";
-    button.textContent = "❝ 발췌";
+    button.className = ref?.className || "lv-excerpt-action-fallback";
+    button.classList.add("lv-excerpt-action");
+    button.innerHTML = QUOTE_SVG;
     button.title = "이 메시지 발췌";
+    button.setAttribute("aria-label", "이 메시지 발췌");
     button.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
