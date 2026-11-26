@@ -2851,11 +2851,15 @@ function messageText(element) {
   const win = body.ownerDocument.defaultView;
   const omitted = (el) => el.matches(EXCLUDED + ', [hidden], [aria-hidden="true"], template, script, style');
   const hidden = (style) => style.display === "none" || style.visibility === "hidden";
-  for (let ancestor = body.parentElement;ancestor; ancestor = ancestor.parentElement) {
-    if (omitted(ancestor) || hidden(win.getComputedStyle(ancestor)))
+  const unslotted = (node) => node.parentElement?.shadowRoot && !node.assignedSlot;
+  const renderedParent = (node) => node.assignedSlot || node.parentElement || node.getRootNode().host;
+  for (let ancestor = body;ancestor; ancestor = renderedParent(ancestor)) {
+    if (unslotted(ancestor) || omitted(ancestor) || hidden(win.getComputedStyle(ancestor)))
       return "";
   }
   function collect(node) {
+    if (unslotted(node))
+      return "";
     if (node.nodeType === 3)
       return node.textContent;
     if (node.nodeType !== 1 || omitted(node))
@@ -2866,7 +2870,13 @@ function messageText(element) {
     if (node.tagName === "BR")
       return `
 `;
-    const text = [...node.childNodes].map(collect).join("");
+    let children = node.shadowRoot?.childNodes || node.childNodes;
+    if (node.tagName === "SLOT" && node.getRootNode().host) {
+      const assigned = node.assignedNodes();
+      if (assigned.length)
+        children = assigned;
+    }
+    const text = [...children].map(collect).join("");
     const block = /^(block|flow-root|flex|grid|list-item|table|table-row|table-caption)( |$)/.test(style.display);
     return block && text ? `
 

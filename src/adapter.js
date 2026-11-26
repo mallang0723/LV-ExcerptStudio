@@ -8,18 +8,28 @@ export function messageText(element) {
   const win = body.ownerDocument.defaultView;
   const omitted = el => el.matches(EXCLUDED + ', [hidden], [aria-hidden="true"], template, script, style');
   const hidden = style => style.display === 'none' || style.visibility === 'hidden';
+  const unslotted = node => node.parentElement?.shadowRoot && !node.assignedSlot;
+  const renderedParent = node => node.assignedSlot || node.parentElement || node.getRootNode().host;
   // Read styles on the live DOM: detached clones lose ancestor and stylesheet context.
   // Prune whole hidden subtrees, including children that override visibility.
-  for (let ancestor = body.parentElement; ancestor; ancestor = ancestor.parentElement) {
-    if (omitted(ancestor) || hidden(win.getComputedStyle(ancestor))) return '';
+  for (let ancestor = body; ancestor; ancestor = renderedParent(ancestor)) {
+    if (unslotted(ancestor) || omitted(ancestor) || hidden(win.getComputedStyle(ancestor))) return '';
   }
   function collect(node) {
+    if (unslotted(node)) return '';
     if (node.nodeType === 3) return node.textContent;
     if (node.nodeType !== 1 || omitted(node)) return '';
     const style = win.getComputedStyle(node);
     if (hidden(style)) return '';
     if (node.tagName === 'BR') return '\n';
-    const text = [...node.childNodes].map(collect).join('');
+    // A shadow host's light DOM is not rendered unless projected through a slot.
+    // Visit only the rendered copy so shadow-scoped styles govern visibility.
+    let children = node.shadowRoot?.childNodes || node.childNodes;
+    if (node.tagName === 'SLOT' && node.getRootNode().host) {
+      const assigned = node.assignedNodes();
+      if (assigned.length) children = assigned;
+    }
+    const text = [...children].map(collect).join('');
     // Preserve both sides of visible blocks without splitting inline text.
     const block = /^(block|flow-root|flex|grid|list-item|table|table-row|table-caption)( |$)/.test(style.display);
     return block && text ? '\n\n' + text + '\n\n' : text;

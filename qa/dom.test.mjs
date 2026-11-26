@@ -88,6 +88,57 @@ test('message collection rejects a hidden body or hidden ancestor', async () => 
     }
   });
 });
+test('HTML island reads visible shadow text once and excludes the unslotted duplicate', () => withFixture(async f => {
+  const body = f.d.querySelector('[data-component="MessageContent"]');
+  body.innerHTML = '<div class="_htmlIsland"></div>';
+  const host = body.firstElementChild;
+  const markup = '<span>첫 문장<span class="popup-card">숨긴 카드</span>입니다.</span>';
+  host.innerHTML = markup;
+  const shadow = host.attachShadow({ mode: 'open' });
+  shadow.innerHTML = '<style>.popup-card { display: none; }</style>' + markup;
+  const computedStyle = f.w.getComputedStyle.bind(f.w);
+  // jsdom does not apply shadow styles or report empty styles for unslotted nodes.
+  // Model those browser results here; visibility.test.mjs checks native shadow CSS.
+  f.w.getComputedStyle = element => {
+    if (host.contains(element) && element !== host) return { display: '', visibility: '' };
+    if (element.getRootNode() === shadow && element.matches('.popup-card')) {
+      return { display: 'none', visibility: 'visible' };
+    }
+    return computedStyle(element);
+  };
+  await f.open();
+  assert.equal(f.d.querySelector('.bs-card-text').textContent, '첫 문장입니다.');
+}));
+test('shadow slots include assigned text or fallback once, with hidden slot subtrees excluded', () => withFixture(async f => {
+  const body = f.d.querySelector('[data-component="MessageContent"]');
+  body.innerHTML = '<div></div>';
+  const host = body.firstElementChild;
+  host.innerHTML = '본문<span slot="detail"> 설명</span><span slot="unused">미할당</span><span slot="hidden">숨긴 할당</span>';
+  host.attachShadow({ mode: 'open' }).innerHTML = '<slot>대체 본문</slot><slot name="detail">대체 설명</slot>'
+    + '<slot name="empty"> 끝</slot><slot name="hidden" style="display:none"></slot>';
+  await f.open();
+  assert.equal(f.d.querySelector('.bs-card-text').textContent, '본문 설명 끝');
+}));
+test('message collection rejects unslotted bodies and follows slot and shadow host ancestors', async () => {
+  const { messageText } = await import('../src/adapter.js');
+  const dom = new JSDOM('<div id="host"><article><div data-component="MessageContent">본문</div></article></div>');
+  try {
+    const host = dom.window.document.querySelector('#host');
+    const article = host.firstElementChild;
+    const shadow = host.attachShadow({ mode: 'open' });
+    assert.equal(messageText(article), '');
+    shadow.innerHTML = '<slot style="display:none"></slot>';
+    assert.equal(messageText(article), '');
+    // Replace the slot: jsdom caches computed styles after shadow attribute edits.
+    shadow.innerHTML = '<slot></slot>';
+    assert.equal(messageText(article), '본문');
+    shadow.replaceChildren(article);
+    host.style.display = 'none';
+    assert.equal(messageText(article), '');
+    host.removeAttribute('style');
+    assert.equal(messageText(article), '본문');
+  } finally { dom.window.close(); }
+});
 test('bubble decorator lifecycle, remount and virtualized id updates avoid duplicate buttons', () => withFixture(async f => {
   assert.equal(f.d.querySelectorAll('.lv-excerpt-action').length, 1); f.render('bubble', 'm2'); await delay(150);
   assert.equal(f.d.querySelectorAll('.lv-excerpt-action').length, 1); await f.open(); assert.ok(f.d.querySelector('.bs-overlay'));

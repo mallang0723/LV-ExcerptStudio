@@ -47,6 +47,24 @@ test('phone close follows viewport width for mouse and touch; live HTML excludes
         await page.locator('.lv-excerpt-action').click();
         await page.locator('#excerpt-overlay-guard button').click();
         assert.equal(await page.locator('.bs-overlay').count(), 0);
+        // Real HTML island: only the shadow copy is rendered, with scoped CSS.
+        const island = await page.evaluate(() => {
+          const body = document.querySelector('[data-component="MessageContent"]');
+          body.innerHTML = '<div class="_htmlIsland"></div>';
+          const host = body.firstElementChild;
+          const markup = '<span>첫 문장<span class="popup-card">숨긴 카드</span>입니다.</span>';
+          host.innerHTML = markup;
+          const shadow = host.attachShadow({ mode: 'open' });
+          shadow.innerHTML = '<style>.popup-card { display:none }</style>' + markup;
+          return {
+            hiddenDisplay: getComputedStyle(shadow.querySelector('.popup-card')).display,
+            lightRendered: host.firstElementChild.getClientRects().length > 0,
+            slots: shadow.querySelectorAll('slot').length,
+          };
+        });
+        assert.deepEqual(island, { hiddenDisplay: 'none', lightRendered: false, slots: 0 });
+        await page.locator('.lv-excerpt-action').click();
+        assert.equal(await page.locator('.bs-card-text').textContent(), '첫 문장입니다.');
       } finally { await context.close(); }
     }
   } finally { await browser.close(); }
